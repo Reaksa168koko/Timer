@@ -288,9 +288,11 @@ const Timer = () => {
                   className="w-20 text-center text-2xl font-medium border border-gray-200 rounded-2xl py-3 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
               </div>
+              
             </div>
           ))}
         </div>
+        
       )}
 
       {/* Controls */}
@@ -303,7 +305,7 @@ const Timer = () => {
             ↺ Reset
           </button>
         )}
-
+  
         {/* Stop ringing button — prominent when ringing */}
         {ringing && (
           <button
