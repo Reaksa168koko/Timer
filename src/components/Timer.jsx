@@ -96,16 +96,10 @@ const Timer = () => {
   }, []);
 
   const getRingColor = () => {
-    if (ringing) return "#10b981";
+    if (ringing) return "#ec4899";
     if (done) return "#10b981";
     if (urgent) return "#ef4444";
-    return "#6366f1";
-  };
-
-  const getGradient = () => {
-    if (ringing || done) return "from-emerald-500 to-teal-500";
-    if (urgent) return "from-red-500 to-rose-500";
-    return "from-indigo-500 to-purple-600";
+    return "#3b82f6";
   };
 
   const inputFields = [
@@ -115,22 +109,33 @@ const Timer = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center p-4">
-      <div className="relative max-w-md w-full">
-        {/* Decorative blur elements */}
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Floating orbs */}
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div className="absolute top-40 right-10 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-20 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+        <div className="absolute bottom-40 right-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-3000"></div>
         
-        {/* Main Card */}
-        <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50">
+        {/* Grid pattern */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%239C27B0\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+        
+        {/* Animated gradient lines */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-400 to-transparent animate-slide"></div>
+        <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-pink-400 to-transparent animate-slide animation-delay-1000"></div>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
+        {/* Glass Card */}
+        <div className="relative backdrop-blur-xl bg-white/10 rounded-3xl shadow-2xl p-8 border border-white/20 max-w-md w-full">
+          
           {/* Timer Ring */}
           <div className="relative flex items-center justify-center mb-8">
-            <div
-              className="relative flex items-center justify-center"
-              style={{ width: 300, height: 300 }}
-            >
+            <div className="relative" style={{ width: 300, height: 300 }}>
               <svg
-                className="absolute inset-0 w-full h-full -rotate-90 transform transition-all duration-700"
+                className="absolute inset-0 w-full h-full -rotate-90"
                 viewBox="0 0 320 320"
               >
                 {/* Background circle */}
@@ -139,12 +144,11 @@ const Timer = () => {
                   cy="160"
                   r="140"
                   fill="none"
-                  stroke="#e5e7eb"
+                  stroke="rgba(255,255,255,0.1)"
                   strokeWidth="12"
-                  className="transition-all"
                 />
                 
-                {/* Progress circle */}
+                {/* Progress circle with glow */}
                 <circle
                   cx="160"
                   cy="160"
@@ -157,41 +161,35 @@ const Timer = () => {
                   strokeDashoffset={CIRC - progress}
                   className="transition-all duration-500 ease-out"
                   style={{
-                    filter: "drop-shadow(0 0 8px rgba(99, 102, 241, 0.3))",
+                    filter: `drop-shadow(0 0 12px ${getRingColor()})`,
                   }}
                 />
               </svg>
 
-              {/* Inner glow effect */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-50/50 to-transparent"></div>
-
               {/* Timer Display */}
-              <div className="relative z-10 flex flex-col items-center gap-2">
-                <div className="flex items-end gap-1">
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <div className="flex items-baseline gap-1">
                   {[
                     { value: h, label: "HRS" },
                     { value: m, label: "MIN" },
                     { value: s, label: "SEC" },
                   ].map(({ value, label }, i) => (
-                    <div key={label} className="flex items-end gap-1">
+                    <div key={label} className="flex items-baseline">
                       {i > 0 && (
-                        <span
-                          className="text-5xl font-light mb-5 leading-none"
-                          style={{ color: getRingColor() }}
-                        >
+                        <span className="text-5xl font-bold text-white/50 mb-3 mx-1">
                           :
                         </span>
                       )}
-                      <div className="flex flex-col items-center">
-                        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl px-4 py-3 shadow-lg">
+                      <div className="text-center">
+                        <div className="bg-black/30 backdrop-blur-sm rounded-2xl px-4 py-2">
                           <span
-                            className="font-bold tabular-nums leading-none text-white"
-                            style={{ fontSize: 72 }}
+                            className="font-bold tabular-nums text-white"
+                            style={{ fontSize: 68 }}
                           >
                             {pad(value)}
                           </span>
                         </div>
-                        <span className="text-xs font-semibold tracking-wider text-gray-500 uppercase mt-2">
+                        <span className="text-xs font-semibold tracking-wider text-white/60 uppercase block mt-2">
                           {label}
                         </span>
                       </div>
@@ -199,15 +197,15 @@ const Timer = () => {
                   ))}
                 </div>
 
-                {/* Status Badge */}
+                {/* Status */}
                 {(ringing || done || (started && !running && remaining > 0)) && (
-                  <div className="mt-4 px-4 py-1.5 rounded-full bg-gray-100/80 backdrop-blur-sm">
-                    <span className={`text-xs font-semibold tracking-wider uppercase ${
-                      ringing ? "text-emerald-600 animate-pulse" :
-                      done ? "text-emerald-600" :
-                      "text-gray-500"
+                  <div className="mt-4 px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+                    <span className={`text-xs font-bold tracking-wider uppercase ${
+                      ringing ? "text-pink-300 animate-pulse" :
+                      done ? "text-green-300" :
+                      "text-white/70"
                     }`}>
-                      {ringing ? "🔔 Ringing..." : done ? "✓ Completed" : "⏸ Paused"}
+                      {ringing ? "🔔 RINGING..." : done ? "✓ COMPLETED" : "⏸ PAUSED"}
                     </span>
                   </div>
                 )}
@@ -217,11 +215,11 @@ const Timer = () => {
 
           {/* Input Fields */}
           {!started && (
-            <div className="mb-8 space-y-4">
-              <div className="flex items-center justify-center gap-3">
-                {inputFields.map(({ label, value, set, max }, i) => (
+            <div className="mb-8">
+              <div className="flex gap-3">
+                {inputFields.map(({ label, value, set, max }) => (
                   <div key={label} className="flex-1">
-                    <label className="block text-center text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                    <label className="block text-center text-xs font-bold text-white/60 uppercase tracking-wider mb-2">
                       {label}
                     </label>
                     <input
@@ -237,7 +235,7 @@ const Timer = () => {
                           )
                         )
                       }
-                      className="w-full text-center text-2xl font-bold text-gray-800 bg-gray-50 border-2 border-gray-200 rounded-2xl py-3 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 transition-all"
+                      className="w-full text-center text-2xl font-bold text-white bg-white/10 border border-white/20 rounded-2xl py-3 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/50 transition-all backdrop-blur-sm"
                     />
                   </div>
                 ))}
@@ -245,26 +243,21 @@ const Timer = () => {
             </div>
           )}
 
-          {/* Action Buttons */}
-          <div className="flex items-center justify-center gap-3">
+          {/* Buttons */}
+          <div className="flex gap-3">
             {started && !ringing && (
               <button
                 onClick={reset}
-                className="group px-6 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
+                className="flex-1 px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition-all duration-300 backdrop-blur-sm border border-white/20"
               >
-                <span className="flex items-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                  Reset
-                </span>
+                ↺ Reset
               </button>
             )}
 
             {ringing && (
               <button
                 onClick={stopRinging}
-                className="px-8 py-3 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95"
+                className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
               >
                 ⏹ Stop Alarm
               </button>
@@ -273,56 +266,89 @@ const Timer = () => {
             {!ringing && (
               <button
                 onClick={started ? (done ? reset : toggle) : start}
-                className={`px-8 py-3 rounded-xl bg-gradient-to-r ${getGradient()} text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 min-w-[140px]`}
+                className={`flex-1 px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl ${
+                  !started
+                    ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                    : running
+                    ? "bg-gradient-to-r from-orange-500 to-red-500 text-white"
+                    : done
+                    ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white"
+                    : "bg-gradient-to-r from-green-500 to-emerald-600 text-white"
+                }`}
               >
-                <span className="flex items-center justify-center gap-2">
-                  {!started ? (
-                    <>
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                      </svg>
-                      Start
-                    </>
-                  ) : running ? (
-                    <>
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                      </svg>
-                      Pause
-                    </>
-                  ) : done ? (
-                    <>
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                      </svg>
-                      Restart
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                      </svg>
-                      Resume
-                    </>
-                  )}
-                </span>
+                {!started
+                  ? "▶ Start Timer"
+                  : running
+                  ? "⏸ Pause"
+                  : done
+                  ? "↺ Restart"
+                  : "▶ Resume"}
               </button>
             )}
           </div>
 
-          {/* Progress Text */}
+          {/* Progress Info */}
           {started && !done && remaining > 0 && (
             <div className="mt-6 text-center">
-              <div className="text-sm text-gray-500 font-medium">
+              <div className="text-sm text-white/60 font-medium">
                 Time Remaining
               </div>
-              <div className="text-xs text-gray-400 mt-1">
+              <div className="text-xs text-white/40 mt-1">
                 {Math.floor(remaining / 60)} minutes {remaining % 60} seconds
               </div>
             </div>
           )}
         </div>
+
+        {/* Footer Text */}
+        <div className="mt-8 text-center text-white/40 text-xs">
+          <p>Focus Timer • Stay Productive</p>
+        </div>
       </div>
+
+      {/* Add custom CSS for animations */}
+      <style jsx>{`
+        @keyframes blob {
+          0% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+          100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+        }
+        @keyframes slide {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        .animate-slide {
+          animation: slide 3s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-3000 {
+          animation-delay: 3s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+        .animation-delay-1000 {
+          animation-delay: 1s;
+        }
+      `}</style>
     </div>
   );
 };
